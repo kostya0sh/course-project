@@ -104,19 +104,25 @@ public:
 		return nullptr;
 	}
 
-	std::vector<FindResult*>* getAllStores() {
+	std::vector<FindResult*>* getAllStores(int regionId) {
 		RegionsFile rf = RegionsFile();
 		rf.load();
 
 		std::vector<FindResult*>* ret = buildGetAllResult();
 
-		std::vector<Region> regions = *rf.getAll();
-		for (auto r : regions) {
-			Region* copy = new Region(r.getId(), r.getName());
-			FindResult* fr = buildFindResult(copy, nullptr);
+		Region* region = *rf.findById();
 
+		if (region) {
+			std::string sfName = "r" + std::to_string(region->getId()) + ".txt";
+			StoresFile sf = StoresFile(sfName.c_str());
+			sf.load();
 
-			ret->push_back(fr);
+			std::vector<Store> stores = *sf.getAll();
+			for (auto s: stores) {
+				Store* copy = new Store(s->getId(), s->getName());
+				FindResult* res = buildFindResult(rr->r, copy);
+				ret->push_back(res);
+			}
 		}
 
 		return ret;
