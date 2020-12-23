@@ -74,5 +74,8 @@
     <ClInclude Include="SectionsFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SectionItemsFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,7 +7,15 @@ class DbFile {
 
 public:
 
-	DbFile(const char* fileName): fileName { fileName } {}
+	virtual ~DbFile() {
+		delete[] fileName;
+	}
+
+	DbFile(const char* fn) {
+		int size = strlen(fn) + 1;
+		this->fileName = new char[size];
+		strcpy_s(this->fileName, size, fn);
+	}
 
 	void load() {
 		std::string line;
@@ -32,6 +40,11 @@ public:
 
 	void flush() {
 		std::fstream rFileW(fileName, std::ios::out | std::ios::trunc);
+
+		if (content.size() <= 0) {
+			return;
+		}
+
 		if (!rFileW.is_open()) {
 			std::cout << "Unable to open file, creating new one..." << std::endl;
 			std::fstream tempW(fileName, std::ios::out);
@@ -79,7 +92,7 @@ public:
 		return nullptr;
 	}
 
-	const char* fileName;
+	char* fileName;
 
 protected:
 

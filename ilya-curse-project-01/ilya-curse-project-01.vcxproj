@@ -165,6 +165,7 @@
     <ClInclude Include="DbFile.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="SectionItem.h" />
+    <ClInclude Include="SectionItemsFile.h" />
     <ClInclude Include="SectionsFile.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="Region.h" />

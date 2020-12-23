@@ -11,15 +11,22 @@ int main() {
     std::cout << "Beginning...\n\n";
 	Database db = Database();
 
-	std::vector<Region*>* regions = db.getAllRegions();
+	db.load();
 
-	std::cout << "Regions:\n";
-	for (auto r : *regions) {
-		std::cout << "\t" << r->toString();
-	}
+	db.exec("add/;region_test_add_0");
+	db.exec("add/:r0/;store_test_add_0");
+	db.exec("add/:r0:s0/;section_test_add_0");
+	db.exec("add/:r0:s0:sc0/;item_test_add_0;type3");
+	db.exec("find/");
+	db.exec("find/:r0:s0:sc0/;;type3");
+	db.exec("find/:r0:s0:sc0/;;type1");
+	db.exec("find/:r1");
+	db.exec("remove/:r0:s0:sc0/0;;");
+	db.exec("remove/:r0:s0/0;");
+	db.exec("remove/:r0/0;");
+	db.exec("remove/0;");
 
-	/*db.addStore(0, "store1");
-	db.addStore(0, "store2");*/
+	db.flush();
 
 	return 0;
 }

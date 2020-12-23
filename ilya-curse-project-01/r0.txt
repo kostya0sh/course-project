@@ -1,2 +1,0 @@
-0;store1
-1;store2
