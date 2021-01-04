@@ -317,6 +317,11 @@ private:
 
 	Query parseQuery(const char* query) {
 		std::string q = std::string(query);
+
+		if (q.empty()) {
+			throw std::exception("Unknown command");
+		}
+
 		std::string cmdStr = q.substr(0, q.find("/"));
 
 		if (cmdStr != "add" && cmdStr != "remove" && cmdStr != "find") {

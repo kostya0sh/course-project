@@ -173,6 +173,7 @@
     <ClInclude Include="Section.h" />
     <ClInclude Include="Store.h" />
     <ClInclude Include="StoresFile.h" />
+    <ClInclude Include="UserInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
