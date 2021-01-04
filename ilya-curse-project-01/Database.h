@@ -3,6 +3,7 @@
 #include "StoresFile.h"
 #include "SectionsFile.h"
 #include "SectionItemsFile.h"
+#include "List.h"
 
 
 class Database {
@@ -40,18 +41,18 @@ public:
 	struct FSection {
 		SectionsFile* section;
 		int storeId;
-		std::vector<FItem*> items;
+		list<FItem*> items;
 	};
 
 	struct FStore {
 		StoresFile* store;
 		int regionId;
-		std::vector<FSection*> sections;
+		list<FSection*> sections;
 	};
 
 	struct FRegion {
 		RegionsFile* region;
-		std::vector<FStore*> stores;
+		list<FStore*> stores;
 	};
 
 	void load() {
@@ -64,7 +65,7 @@ public:
 			std::string sfName = "r" + std::to_string(r.getId()) + ".txt";
 			FStore* fStore = new FStore();
 			fStore->regionId = r.getId();
-			fRegion->stores.push_back(fStore);
+			fRegion->stores.put(fStore);
 		    (*fStore).store = new StoresFile(sfName.c_str());
 			fStore->store->load();
 
@@ -73,7 +74,7 @@ public:
 				std::string scfName = sfName.substr(0, sfName.length() - 4) + "_s" + std::to_string(s.getId()) + ".txt";
 				FSection* fSection = new FSection();
 				fSection->storeId = s.getId();
-				fStore->sections.push_back(fSection);
+				fStore->sections.put(fSection);
 				fSection->section = new SectionsFile(scfName.c_str());
 				fSection->section->load();
 
@@ -82,7 +83,7 @@ public:
 					std::string siName = scfName.substr(0, scfName.length() - 4) + "_sc" + std::to_string(sc.getId()) + ".txt";
 					FItem* fItem = new FItem();
 					fItem->sectionId = sc.getId();
-					fSection->items.push_back(fItem);
+					fSection->items.put(fItem);
 
 					fItem->items = new SectionItemsFile(siName.c_str());
 					
