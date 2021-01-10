@@ -11,7 +11,7 @@ class Database {
 public:
 
 	~Database() {
-	
+		
 	}
 
 	enum QueryItemType { REGION, STORE, SECTION, ITEM, NONE };
@@ -95,7 +95,22 @@ public:
 		loaded = fRegion;
 	}
 
+	void revert() {
+		if (fstates.empty()) {
+			return;
+		}
+
+		loaded = fstates.back();
+		flush();
+		fstates.pop_back();
+	}
+
 	void flush() {
+		std::string command = "del /Q ";
+		std::string path = ".\\*.txt";
+
+		system(command.append(path).c_str());
+
 		loaded->region->flush();
 
 		for (auto fStore: loaded->stores) {
@@ -125,13 +140,26 @@ public:
 		if (q.cmd == "remove") {
 			removeItem(q, query);
 		}
+
+		if (q.cmd == "revert") {
+			revert();
+		}
 	}
 
 	void removeItem(Query q, const char* rawQuery) {
+		fstates.push_back(loaded);
+		load();
+
 		auto regions = loaded->region->getAll();
 
 		if (q.itemType == REGION) {
-			loaded->region->deleteById(q.region.getId());
+			if (loaded->region->deleteById(q.region.getId())) {
+				flush();
+				load();
+			}
+			else {
+				fstates.pop_back();
+			}
 			return;
 		}
 
@@ -143,7 +171,13 @@ public:
 			auto stores = fStore->store->getAll();
 
 			if (q.itemType == STORE) {
-				fStore->store->deleteById(q.store.getId());
+				if (fStore->store->deleteById(q.store.getId())) {
+					flush();
+					load();
+				}
+				else {
+					fstates.pop_back();
+				}
 				return;
 			}
 
@@ -155,7 +189,13 @@ public:
 				auto sections = fSection->section->getAll();
 
 				if (q.itemType == SECTION) {
-					fSection->section->deleteById(q.section.getId());
+					if (fSection->section->deleteById(q.section.getId())) {
+						flush();
+						load();
+					}
+					else {
+						fstates.pop_back();
+					}
 					return;
 				}
 
@@ -164,7 +204,13 @@ public:
 						continue;
 					}
 
-					fItem->items->deleteById(q.item.getId());
+					if (fItem->items->deleteById(q.item.getId())) {
+						flush();
+						load();
+					}
+					else {
+						fstates.pop_back();
+					}
 					return;
 				}
 			}
@@ -172,6 +218,9 @@ public:
 	}
 
 	void addItem(Query q, const char* rawQuery) {
+		fstates.push_back(loaded);
+		load();
+
 		auto regions = loaded->region->getAll();
 
 		bool added = false;
@@ -325,8 +374,22 @@ private:
 
 		std::string cmdStr = q.substr(0, q.find("/"));
 
-		if (cmdStr != "add" && cmdStr != "remove" && cmdStr != "find") {
+		if (cmdStr != "add" && cmdStr != "remove" && cmdStr != "find" && cmdStr != "revert") {
 			throw std::exception("Unknown command");
+		}
+
+		if (cmdStr == "revert") {
+			return Query{
+			-1,
+			-1,
+			-1,
+			cmdStr,
+			NONE,
+			SectionItem(-1),
+			Region(-1),
+			Store(-1),
+			Section(-1),
+			};
 		}
 
 		std::string paramsStr = q.substr(q.find("/") + 1, q.length());
@@ -522,6 +585,7 @@ private:
 	}
 
 
+	std::vector<FRegion*> fstates = std::vector<FRegion*>();
 	FRegion* loaded;
 };
 

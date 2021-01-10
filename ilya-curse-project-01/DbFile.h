@@ -73,15 +73,17 @@ public:
 		return nullptr;
 	}
 
-	void deleteById(int id) {
+	bool deleteById(int id) {
 		int i = 0;
 		for (auto item : content) {
 			if (item.getId() == id) {
 				content.erase(content.begin() + i);
-				return;
+				return true;
 			}
 			i++;
 		}
+
+		return false;
 	}
 
 	virtual void create(T& e) {

@@ -161,6 +161,7 @@
     <ClCompile Include="Store.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DbFile.h" />
     <ClInclude Include="Entity.h" />
