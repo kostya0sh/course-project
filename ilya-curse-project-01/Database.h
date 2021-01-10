@@ -4,6 +4,7 @@
 #include "SectionsFile.h"
 #include "SectionItemsFile.h"
 #include "List.h"
+#include "MyException.h"
 
 
 class Database {
@@ -369,13 +370,13 @@ private:
 		std::string q = std::string(query);
 
 		if (q.empty()) {
-			throw std::exception("Unknown command");
+			throw MyException(1, "Unknown command");
 		}
 
 		std::string cmdStr = q.substr(0, q.find("/"));
 
 		if (cmdStr != "add" && cmdStr != "remove" && cmdStr != "find" && cmdStr != "revert") {
-			throw std::exception("Unknown command");
+			throw MyException(1, "Unknown command");
 		}
 
 		if (cmdStr == "revert") {

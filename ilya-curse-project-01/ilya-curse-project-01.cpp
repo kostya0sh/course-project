@@ -9,7 +9,11 @@ int main() {
 		try {
 			UserInput::start();
 			break;
-		} catch (std::exception e) {
+		}
+		catch (MyException e) {
+			std::cout << e.what() << std::endl;
+		}
+		catch (std::exception e) {
 			std::cout << e.what() << std::endl;
 		}
 	}

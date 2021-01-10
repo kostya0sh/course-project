@@ -166,6 +166,7 @@
     <ClInclude Include="DbFile.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="MyException.h" />
     <ClInclude Include="SectionItem.h" />
     <ClInclude Include="SectionItemsFile.h" />
     <ClInclude Include="SectionsFile.h" />
